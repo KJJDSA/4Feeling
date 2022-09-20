@@ -111,18 +111,20 @@
                         let comment = rows[i]['comment'];
 
                         let temp_html = `<div class="col">
-                                            <div class="card">
-                                                <div class="ratio ratio-16x9">
-                                                  <iframe width="560" height="315" src="https://www.youtube.com/embed/${url}" title="YouTube video" allowfullscreen></iframe>
-                                                </div>
-                                                <div class="card-body">
-                                                    <h5 class="card-title">${title}</h5>
-                                                    <p class="card-text">${comment}</p>
-                                                    <p class="card-text"><small class="text-muted">${feeling}</small></p>
-                                                </div>
+                                          <div class="card">
+                                            <div class="ratio ratio-16x9">
+                                              <iframe width="560" height="315" src="https://www.youtube.com/embed/${url}" class="card-img-top"
+                                                      alt="...">
+                                              </iframe>
                                             </div>
+                                            <div class="card-body">
+                                              <h5 class="card-title">${title}</h5>
+                                              <p class="card-feeling">${feeling}</p>
+                                              <p class="card-text">${comment}</p>
+                                            </div>
+                                          </div>
                                         </div>`
-                        $('#cards_box').prepend(temp_html);
+                        $('#cards_box').append(temp_html)
                     }
                 }
             });
