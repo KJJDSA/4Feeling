@@ -132,7 +132,7 @@ crossorigin="anonymous"></script>
 
             $.ajax({
                 type: 'POST',
-                url: '/happy_post',
+                url: '/post',
                 data: {'url_give': url, 'feeling_give': feeling, 'comment_give': comment},
                 success: function (response) {
                     alert(response['msg'])
@@ -156,10 +156,10 @@ crossorigin="anonymous"></script>
         <h2>희~~~</h2>
         <button onclick="open_box()">음악 기록하기</button>
         <div class="category">
-            <button onclick="location a herf:" type="button" class="btn btn-primary" >Primary</button>
+            <button onclick="location.href='/'" type="button" class="btn btn-primary" >Primary</button>
             <button type="button" class="btn btn-danger">Danger</button>
             <button type="button" class="btn btn-warning">Warning</button>
-            <button type="button" class="btn btn-light">Light</button>
+            <button onclick="location.href='/joy'" type="button" class="btn btn-light">Light</button>
         </div>
     </div>
     <div class="mypost" id="post-box">
