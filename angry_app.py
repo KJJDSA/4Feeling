@@ -12,7 +12,7 @@ def index():
 @app.route("/angry", methods=["GET"])
 def angry_get():
     angrys_list = list(db.angrys.find({}, {'_id': False}))
-    return jsonify({'angrys': angrys_list })
+    return jsonify({'angrys': angrys_list})
 
 @app.route("/angry", methods=["POST"])
 def angry_post():
