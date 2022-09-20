@@ -35,10 +35,11 @@ def music_post():
     db.posts.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
 
-@app.route("/post_get", methods=["GET"])
+@app.route("/sad_get", methods=["GET"])
 def post_get():
     post_list = list(db.posts.find({}, {'_id': False}))
-    return jsonify({'posts':post_list})
+    return jsonify({'posts': post_list})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

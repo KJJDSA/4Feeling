@@ -99,36 +99,38 @@
     function listing() {
             $.ajax({
                 type:'GET',
-                url:'/post_get',
+                url:'/sad_get',
                 data: {},
                 success:function(response) {
-                    let rows = response['posts'];
-                    for ( let i = 0; i < rows.length; i++){
-                        let url = rows[i]['url'].split('watch?v=')[1];
-                        let title = rows[i]['title'];
-                        // let name = rows[i]['name'];
-                        let feeling = rows[i]['feeling'];
-                        let comment = rows[i]['comment'];
+                    let rows = response['posts']
+                  for (let i = 0; i < rows.length; i++){
+                    let url = rows[i]['url'].split('watch?v=')[1]
+                    let title = rows[i]['title']
+                    let feeling = rows[i]['feeling']
+                    let comment = rows[i]['comment']
 
-                        let temp_html = `<div class="col">
-                                          <div class="card">
-                                            <div class="ratio ratio-16x9">
-                                              <iframe width="560" height="315" src="https://www.youtube.com/embed/${url}" class="card-img-top"
-                                                      alt="...">
-                                              </iframe>
-                                            </div>
-                                            <div class="card-body">
-                                              <h5 class="card-title">${title}</h5>
-                                              <p class="card-feeling">${feeling}</p>
-                                              <p class="card-text">${comment}</p>
-                                            </div>
+                    let temp_html = `<div class="col">
+                                        <div class="card">
+                                          <div class="ratio ratio-16x9">
+                                            <iframe width="560" height="315" src="https://www.youtube.com/embed/${url}" class="card-img-top"
+                                                    alt="...">
+                                            </iframe>
                                           </div>
-                                        </div>`
-                        $('#cards_box').append(temp_html)
-                    }
+                                          <div class="card-body">
+                                            <h5 class="card-title">${title}</h5>
+                                            <p class="card-feeling">${feeling}</p>
+                                            <p class="card-text">${comment}</p>
+                                          </div>
+                                        </div>
+                                      </div>`
+
+                    $('#cards-box').prepend(temp_html)
+                  }
                 }
             });
+
         }
+
 
     function posting() {
             let url = $('#url').val()
@@ -183,7 +185,7 @@
     </select>
   </div>
   <div class="form-floating">
-    <textarea id="floatingTextarea2" class="form-control" placeholder="Leave a comment here"></textarea>
+    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" ></textarea>
     <label for="floatingTextarea2">코멘트</label>
   </div>
   <div class="mybtns">
@@ -192,64 +194,7 @@
   </div>
 </div>
 <div class="mycards">
-  <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4">
-    <div class="col">
-      <div class="card">
-        <div class="ratio ratio-16x9">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/ba7mB8oueCY" class="card-img-top"
-                  alt="...">
-          </iframe>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Post-malone</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-            additional content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <div class="ratio ratio-16x9">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/UYwF-jdcVjY" class="card-img-top"
-                  alt="...">
-          </iframe>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-            additional content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-  <div class="card">
-    <div class="ratio ratio-16x9">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/UYwF-jdcVjY" class="card-img-top"
-              alt="...">
-      </iframe>
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-        additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-</div>
-    <div class="col">
-  <div class="card">
-    <div class="ratio ratio-16x9">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/UYwF-jdcVjY" class="card-img-top"
-              alt="...">
-      </iframe>
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-        additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-</div>
-
+  <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4" >
   </div>
 </div>
 </body>
