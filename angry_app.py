@@ -5,10 +5,9 @@ from pymongo import MongoClient
 client = MongoClient('mongodb+srv://test:sparta@cluster0.oqxmexp.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 
-@app.route('/angry')
+@app.route('/')
 def index():
     return render_template('angry.html')
-
 
 @app.route("/angry", methods=["POST"])
 def angry_post():
@@ -29,7 +28,7 @@ def angry_post():
 
     return jsonify({'msg':'추천 완료!'})
 
-@app.route("/angry", methods=["GET"])
+@app.route("/angry1", methods=["GET"])
 def angry_get():
     angry_list = list(db.angrys.find({}, {'_id': False}))
     return jsonify({'angrys': angry_list})

@@ -169,29 +169,29 @@
                 data: {},
                 success:function(response) {
                     let rows = response['angrys'];
-                    console.log(rows);
-                    for (let i = 0; i < rows.length; i++){
-                        let url = rows[i]['url'];
-                        let title = rows[i]['title'];
-                        let name = rows[i]['name'];
-                        let feeling = rows[i]['feeling'];
-                        let comment = rows[i]['comment'];
+                    console.log(response);
+                    {#for (let i = 0; i < rows.length; i++){#}
+                    {#    let url = rows[i]['url'];#}
+                    {#    let title = rows[i]['title'];#}
+                    {#    let name = rows[i]['name'];#}
+                    {#    let feeling = rows[i]['feeling'];#}
+                    {#    let comment = rows[i]['comment'];#}
+                    {##}
+                    {#    let temp_html = `<div class="col cardBox">#}
+                    {#                        <div class="card">#}
+                    {#                                <div class="iframeBox">#}
+                    {#                                    ${url}#}
+                    {#                                </div>#}
+                    {#                            <div class="card-body">#}
+                    {#                                <h4 class="vedio_title">${title}</h4>#}
+                    {#                                <h5 class="card-title">${name}</h5>#}
+                    {#                                <p class="feelings">${feeling}</p>#}
+                    {#                                <p class="card-text">${comment}</p>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {#                    </div>`;#}
+                    {#    $('#cards_box').prepend(temp_html);#}
 
-                        let temp_html = `<div class="col cardBox">
-                                            <div class="card">
-                                                    <div class="iframeBox">
-                                                        ${url}
-                                                    </div>
-                                                <div class="card-body">
-                                                    <h4 class="vedio_title">${title}</h4>
-                                                    <h5 class="card-title">${name}</h5>
-                                                    <p class="feelings">${feeling}</p>
-                                                    <p class="card-text">${comment}</p>
-                                                </div>
-                                            </div>
-                                        </div>`;
-                        $('#cards_box').prepend(temp_html);
-                    }
                 }
             });
         }
