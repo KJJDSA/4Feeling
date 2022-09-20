@@ -4,7 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
+<<<<<<< HEAD:.idea/Chapter1.iml
     <orderEntry type="jdk" jdkName="Python 3.8 (4Feeling)" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
+>>>>>>> bd43e30f1b615b29285e3578dc1b26d9e2fc391c:.idea/4Feeling.iml
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
