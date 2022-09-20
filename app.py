@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 client = MongoClient('mongodb+srv://test:sparta@cluster0.i6a0slt.mongodb.net/Cluster0?retryWrites=true&w=majority')
-db = client.dbsparta_plus_week4
+db = client.dbsparta_plus
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 def main():
     return render_template("index.html")
 
-@app.route("/post", methods=["POST"])
+@app.route("/posting", methods=["POST"])
 def music_post():
     url_receive = request.form['url_give']
     feeling_receive = request.form['feeling_give']
@@ -26,6 +26,7 @@ def music_post():
     soup = BeautifulSoup(data.text, 'html.parser')
 
     title = soup.select_one('meta[itemprop="name"][content]')['content']
+    # 제목 뽑아오는 코드
 
     doc = {
         'title': title,

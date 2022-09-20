@@ -108,22 +108,18 @@ crossorigin="anonymous"></script>
                         let feeling = rows[i]['feeling'];
                         let comment = rows[i]['comment'];
 
-                        let temp_html = `<div class="wrap">
-                                                <div class="row row-cols-1 row-cols-md-4 g-4">
-                                                    <div class="col">
-                                                        <div class="card">
-                                                            <div class="ratio ratio-16x9">
-                                                              <iframe src="https://www.youtube.com/embed/${url}" title="YouTube video" allowfullscreen></iframe>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <h5 class="card-title">${title}</h5>
-                                                                <p class="card-text">${comment}</p>
-                                                                <p class="card-text"><small class="text-muted">${feeling}</small></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                        let temp_html = `<div class="col">
+                                            <div class="card">
+                                                <div class="ratio ratio-16x9">
+                                                  <iframe src="https://www.youtube.com/embed/${url}" title="YouTube video" allowfullscreen></iframe>
                                                 </div>
-                                            </div>`;
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${title}</h5>
+                                                    <p class="card-text">${comment}</p>
+                                                    <p class="card-text"><small class="text-muted">${feeling}</small></p>
+                                                </div>
+                                            </div>
+                                        </div>`;
                         $('#cards_box').prepend(temp_html);
                     }
                 }
@@ -136,7 +132,7 @@ crossorigin="anonymous"></script>
 
             $.ajax({
                 type: 'POST',
-                url: '/post',
+                url: '/posting',
                 data: {'url_give': url, 'feeling_give': feeling, 'comment_give': comment},
                 success: function (response) {
                     alert(response['msg'])
@@ -193,20 +189,7 @@ crossorigin="anonymous"></script>
 
     </div>
     <div class="wrap">
-        <div id="cards_box" class="row row-cols-1 row-cols-md-4 g-4">
-            <div class="col">
-                <div class="card">
-                <div class="card">s
-                    <div class="ratio ratio-16x9">
-                      <iframe src="https://www.youtube.com/watch?v=eXYMfkCQhRM" title="YouTube video" allowfullscreen></iframe>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                    </div>
-                </div>
-            </div>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
         </div>
     </div>
 
