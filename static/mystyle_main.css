@@ -1,0 +1,135 @@
+* {
+    font-family: 'Jua', sans-serif;
+}
+body {
+    background-color: antiquewhite;
+    min-height: 100vh;
+}
+.mytitle_joy{
+      width: 100%;
+      height: 250px;
+
+      background-position: center;
+      background-size: auto;
+
+      color: white;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+ .mytitle_happy{
+      width: 100%;
+      height: 250px;
+
+
+      background-position: center;
+      background-size: auto;
+
+      color: white;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+ .mytitle_angry{
+      width: 100%;
+      height: 250px;
+
+
+      background-position: center;
+      background-size: auto;
+
+      color: white;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+ .mytitle_sad {
+      width: 100%;
+      height: 250px;
+
+
+      background-position: center;
+      background-size: auto;
+
+      color: white;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+/*.title {*/
+/*    margin-left: 90px;*/
+/*}*/
+/*.subtitle {*/
+/*    margin-left: 90px;*/
+/*}*/
+.mytitle > button {
+    width: 200px;
+    height: 50px;
+
+    background-color: transparent;
+    color: white;
+
+    border-radius: 50px;
+    border: 1px solid white;
+
+    margin-bottom: 10px;
+}
+.mytitle > button:hover {
+    border: 2px solid white;
+}
+.mycomment {
+    color: gray;
+}
+.wrap {
+    max-width: 1200px;
+    width: 95%;
+    margin: 20px auto 0px auto;
+}
+.mypost {
+    background-color: white;
+    max-width: 500px;
+    width: 95%;
+    border-radius: 10px;
+
+    margin-top: 20px;
+    box-shadow: 0px 0px 3px 0px gray;
+    padding: 20px;
+
+    display: none;
+}
+.mybtn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 10px;
+
+}
+.mybtn > button {
+    margin-right: 10px;
+}
+
+.category {
+    margin-top: 10px;
+}
+.card-img-top{
+    width: 400px;
+    height: 300px;
+}
+.level {
+    margin-top: 20px;
+}
+.font {
+    font-family: 'Bungee Spice', cursive;
+    font-size: 30px;
+    text-decoration: none;
+}
