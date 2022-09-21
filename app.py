@@ -3,8 +3,8 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 app = Flask(__name__)
 
 from pymongo import MongoClient
-client = MongoClient('mongodb+srv://test:sparta@cluster0.i6a0slt.mongodb.net/Cluster0?retryWrites=true&w=majority')
-db = client.dbsparta_plus
+client = MongoClient('mongodb://43.201.21.84', 27017, username="test", password="test")
+db = client.forfeeling
 
 import requests
 from bs4 import BeautifulSoup
@@ -37,16 +37,21 @@ def post():
         'feeling': feeling_receive,
         'comment': comment_receive
     }
-    if feeling_receive == 'happy':
-        db.happys.insert_one(doc)
-    else:
-        db.joys.insert_one(doc)
+    db.posts.insert_one(doc)
+
 
     return jsonify({'msg': '저장 완료!'})
 
+
+
 @app.route("/happy_get", methods=["GET"])
 def happy_get():
-    post_list = list(db.happys.find({}, {'_id': False}))
+    post_list = list(db.posts.find({'feeling':'기쁨'}, {'_id': False}))
+    return jsonify({'posts':post_list})
+
+@app.route("/joy_get", methods=["GET"])
+def joy_get():
+    post_list = list(db.posts.find({'feeling':'즐거움'}, {'_id': False}))
     return jsonify({'posts':post_list})
 
 # @app.route("/joy_post", methods=["POST"])
@@ -72,10 +77,10 @@ def happy_get():
 #     db.joys.insert_one(doc)
 #     return jsonify({'msg': '저장 완료!'})
 
-@app.route("/joy_get", methods=["GET"])
-def joy_get():
-    post_list = list(db.joys.find({}, {'_id': False}))
-    return jsonify({'posts':post_list})
+# @app.route("/joy_get", methods=["GET"])
+# def joy_get():
+#     post_list = list(db.joys.find({}, {'_id': False}))
+#     return jsonify({'posts':post_list})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
