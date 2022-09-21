@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+crossorigin="anonymous"></script>
+
+<title>4feeling 즐거움</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+            }
+        .mytitle{
+            background-color: green;
+            height: 250px;
+            width: 100%;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://t1.daumcdn.net/cfile/tistory/99E2393B5A61D29F2D");
+            background-position: center;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .mytitle > button {
+            width: 200px;
+            height: 50px;
+
+            background-color: transparent;
+            color: white;
+
+            border-radius: 50px;
+            border: 1px solid white;
+
+            margin-top: 10px;
+        }
+        .mytitle > button:hover {
+            border: 2px solid white;
+        }
+        .mycomment {
+            color: gray;
+        }
+        .wrap {
+            max-width: 1200px;
+            width: 95%;
+            margin: 20px auto 0px auto;
+        }
+        .mypost {
+            max-width: 500px;
+            width: 95%;
+
+
+            margin: 20px auto 0px auto;
+            box-shadow: 0px 0px 3px 0px gray;
+            padding: 20px;
+
+            display: none;
+        }
+        .mybtn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+
+            margin-top: 10px;
+
+        }
+        .mybtn > button {
+            margin-right: 10px;
+        }
+
+        .category {
+            margin-top: 10px;
+        }
+        .card-img-top{
+            width: 400px;
+            height: 300px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type:'GET',
+                url:'/joy_get',
+                data: {},
+                success:function(response) {
+                    let rows = response['posts'];
+                    for ( let i = 0; i < rows.length; i++){
+                        let url = rows[i]['url'].split('watch?v=')[1];
+                        let title = rows[i]['title'];
+                        // let name = rows[i]['name'];
+                        let feeling = rows[i]['feeling'];
+                        let comment = rows[i]['comment'];
+
+                        let temp_html = `<div class="col">
+                                            <div class="card">
+                                                <div class="ratio ratio-16x9">
+                                                  <iframe src="https://www.youtube.com/embed/${url}" title="YouTube video" allowfullscreen></iframe>
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${feeling}</h5>
+                                                    <p class="card-text">${comment}</p>
+                                                    <p class="card-text"><small class="text-muted">${title}</small></p>
+                                                </div>
+                                            </div>
+                                        </div>`;
+                        $('#cards_box').prepend(temp_html);
+                    }
+                }
+            });
+        }
+        function posting() {
+            let url = $('#url').val()
+            let feeling = $('#inputGroupSelect01').val()
+            let comment = $('#floatingTextarea2').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/posting',
+                data: {'url_give': url, 'feeling_give': feeling, 'comment_give': comment},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload() //새로고침
+                }
+            });
+        }
+        function open_box(){
+            $('#post-box').show()
+        }
+        function close_box(){
+            $('#post-box').hide()
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="mytitle">
+        <h1>기분이 이럴때 이 음악을 들어보세요</h1>
+        <h5>신나게 즐겨 보아요</h5>
+        <button onclick="open_box()">음악 기록하기</button>
+        <div class="category">
+            <button onclick="location.href='/happy'" type="button" class="btn btn-primary">기쁨</button>
+            <button onclick="location.href='/angry'" type="button" class="btn btn-danger">분노</button>
+            <button onclick="location.href='/'" type="button" class="btn btn-warning">슬픔</button>
+            <button onclick="location.href='/joy'" type="button" class="btn btn-light">즐거움</button>
+        </div>
+    </div>
+    <div class="mypost" id="post-box">
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="url" placeholder="name@example.com">
+            <label for="floatingInput">유튜브 URL</label>
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">기분</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>---선택하기---</option>
+                <option value="기쁨">기쁨</option>
+                <option value="분노">분노</option>
+                <option value="슬픔">슬픔</option>
+                <option value="즐거움">즐거움</option>
+
+            </select>
+        </div>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                      style="height: 100px"></textarea>
+            <label for="floatingTextarea2">코멘트</label>
+        </div>
+        <div class="mybtn">
+        <button onclick="posting()" type="button" class="btn btn-dark">기록하기</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+        </div>
+
+    </div>
+    <div class="wrap">
+        <div id="cards_box" class="row row-cols-1 row-cols-md-4 g-4">
+        </div>
+    </div>
+
+</body>
+
+</html>
