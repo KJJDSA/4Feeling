@@ -3,7 +3,7 @@
 <head>
 
     <!-- Webpage Title -->
-    <title>Log In | SWEETER</title>
+    <title>Log In | FourFeeling</title>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -12,16 +12,19 @@
     <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!-- Font Awesome CSS -->
+
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dongle&family=Gaegu:wght@700&display=swap" rel="stylesheet">
+
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <style>
         body {
-            background-color: antiquewhite;
+            background: linear-gradient(45deg, #ffb0ff, orange);
             min-height: 100vh;
         }
 
@@ -34,39 +37,58 @@
         .title {
             font-weight: 800;
             font-size: 5rem;
-            font-family: 'Black Han Sans', sans-serif;
 
+            font-family: 'Gaegu', cursive;
 
         }
 
         .subtitle {
             font-size: 2rem;
-            font-family: 'Jua', sans-serif;
+            font-family: 'Dongle', sans-serif;
+        }
+        .forfeeling {
+            color: #fff;
+            text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa,
+            0 0 82px #0fa, 0 0 92px #0fa, 0 0 102px #0fa, 0 0 151px #0fa;
         }
 
         .is-sparta {
-            color: #33d36b !important;
+
+            color: #ffabf4 !important;
         }
+
+
         .button.is-sparta {
-            background-color: #50d231;
+            background-color: #ffacac;
             border-color: transparent;
-            color: #fff !important;
+            color: #000000 !important;
         }
 
         .button.is-sparta.is-outlined {
-            background-color: transparent;
-            border-color: #34e84c;
-            color: #34e873 !important;
+            background-color: #ffc568;
+            border-color: transparent;
+            color: #000000 !important;
         }
 
         .help {
-            color: #656565;
+            color: gray;
+        }
+        .clickbutton {
+            color: white;
+            background-color: #ff84b7;
+
+        }
+        .cancelbutton {
+            color: black;
+            background-color: white;
+            border-color: #ff84b7;
         }
     </style>
+
     <script>
         // {% if msg %}
-            //     alert("{{ msg }}")
-            // {% endif %}
+        //     alert("{{ msg }}")
+        // {% endif %}
         function sign_in() {
             let username = $("#input-username").val()
             let password = $("#input-password").val()
@@ -105,39 +127,30 @@
         }
 
         function sign_up() {
-            //회원가입 버튼
             let username = $("#input-username").val()
             let password = $("#input-password").val()
             let password2 = $("#input-password2").val()
-            //비밀번호 확인을 위해 패스워드는 두개이다.
             console.log(username, password, password2)
 
 
             if ($("#help-id").hasClass("is-danger")) {
-                //is-danger 클래스를 가지고 있다면.
                 alert("아이디를 다시 확인해주세요.")
-                //아니라고? 그러면
                 return;
             } else if (!$("#help-id").hasClass("is-success")) {
-                //is-success 클래스를 가지고 있다면
                 alert("아이디 중복확인을 해주세요.")
-                //그것도 아니야? 그럼
                 return;
             }
 
             if (password == "") {
-                //패스워드가 빈칸인지
                 $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#input-password").focus()
                 return;
             } else if (!is_password(password)) {
                 $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
                 $("#input-password").focus()
-                //패스워드가 정규식에 맞는지.
                 return
             } else {
                 $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
-                //첫번째 패스워드가 통과하였음.
             }
             if (password2 == "") {
                 $("#help-password2").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
@@ -146,11 +159,9 @@
             } else if (password2 != password) {
                 $("#help-password2").text("비밀번호가 일치하지 않습니다.").removeClass("is-safe").addClass("is-danger")
                 $("#input-password2").focus()
-                //패스워드가 같은지 마지막 확인
                 return;
             } else {
                 $("#help-password2").text("비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
-                //마지막까지 확인이 끝났으니 보낼게!
             }
             $.ajax({
                 type: "POST",
@@ -166,6 +177,7 @@
             });
 
         }
+
         function toggle_sign_up() {
             $("#sign-up-box").toggleClass("is-hidden")
             $("#div-sign-in-or-up").toggleClass("is-hidden")
@@ -176,7 +188,7 @@
         }
 
         function is_nickname(asValue) {
-            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/; //이게 정규표현식이다.
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
             return regExp.test(asValue);
         }
 
@@ -188,19 +200,16 @@
         function check_dup() {
             let username = $("#input-username").val()
             console.log(username)
-            //공란일 때 거부하는 함수
             if (username == "") {
                 $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#input-username").focus()
                 return;
             }
-            //아이디 정규식을 확인하는 함수
             if (!is_nickname(username)) {
                 $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
                 $("#input-username").focus()
                 return;
             }
-            //중복확인 함수
             $("#help-id").addClass("is-loading")
             $.ajax({
                 type: "POST",
@@ -221,14 +230,15 @@
                 }
             });
         }
+
     </script>
 
 </head>
 <body>
 <section class="hero is-white">
     <div class="hero-body has-text-centered" style="padding-bottom:1rem;margin:auto;">
-        <h1 class="title is-sparta">희,노,애,락</h1>
-        <h3 class="subtitle is-sparta">좋을때 나쁠때 언제나 듣는 음악</h3>
+        <h1 class="title forfeeling">4 Feeling</h1>
+        <h5 class="subtitle is-sparta2">🎼기분에 맞춰서 추천해주는 음악들🎧</h5>
     </div>
 </section>
 <section class="section">
@@ -243,7 +253,7 @@
                                 <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
                             </div>
                             <div id="btn-check-dup" class="control is-hidden">
-                                <button class="button is-sparta" onclick="check_dup()">중복확인</button>
+                                <button class="button clickbutton" onclick="check_dup()">중복확인</button>
                             </div>
 
                         </div>
@@ -255,7 +265,8 @@
                                 <input id="input-password" class="input" type="password" placeholder="비밀번호">
                                 <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
                             </div>
-                            <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용 가능합니다.</p>
+                            <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요. 특수문자(!@#$%^&*)도 사용
+                                가능합니다.</p>
                         </div>
 
 
@@ -271,7 +282,8 @@
                         <h4 class="mb-3">아직 회원이 아니라면</h4>
                         <nav class="level is-mobile">
 
-                            <button class="level-item button is-sparta is-outlined" onclick="toggle_sign_up()">
+                            <button class="level-item button is-sparta is-outlined"
+                                    onclick="toggle_sign_up()">
                                 회원가입하기
                             </button>
                         </nav>
@@ -290,10 +302,10 @@
                             </div>
                         </div>
                         <nav class="level is-mobile">
-                            <button class="level-item button is-sparta" onclick="sign_up()">
+                            <button class="level-item button clickbutton" onclick="sign_up()">
                                 회원가입
                             </button>
-                            <button class="level-item button is-sparta is-outlined" onclick="toggle_sign_up()">
+                            <button class="level-item button cancelbutton is-outlined" onclick="toggle_sign_up()">
                                 취소
                             </button>
                         </nav>
