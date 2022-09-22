@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
 from pymongo import MongoClient
-client = MongoClient('mongodb://43.201.21.84', 27017, username="test", password="test")
+client = MongoClient('43.200.172.68', 27017, username="test", password="test")
 db = client.forfeeling
 # client = MongoClient('mongodb://43.201.21.84', 27017, username="test", password="test")
 # db = client.forfeeling
@@ -86,6 +86,20 @@ def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
+    # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
+@app.route('/user/<username>')
+def user(username):
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        status = (username == payload["id"])
+        # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
+
+        user_info = db.users.find_one({"username": username}, {"_id": False})
+        return render_template('user.html', user_info=user_info, status=status)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
     # 로그인
@@ -142,37 +156,94 @@ def check_dup():
 
 ######################### 로그인기능 끝
 
+@app.route('/update_profile', methods=['POST'])
+def save_img():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        username = payload["id"]
+        name_receive = request.form["name_give"]
+        about_receive = request.form["about_give"]
+        new_doc = {
+            "profile_name": name_receive,
+            "profile_info": about_receive
+        }
+        if 'file_give' in request.files:
+            # request.files = 플라스크 에서 파일을 가져오는 방식 중 하나.
+            # 'file_give'라는 키를 제시했으므로 그 밸류값에 있는 파일 링크를 가져온다.
+            file = request.files["file_give"]
+
+            filename = secure_filename(file.filename)
+            # = 파일 경로를 보안 작업 하는거.
+            extension = filename.split(".")[-1]
+            # split()[-1] 은 쪼갠 값의 마지막 값을 요구 하는것.
+            file_path = f"profile_pics/{username}.{extension}"
+            # f string 이라는 건데
+            file.save("./static/"+file_path)
+            new_doc["profile_pic"] = filename
+            new_doc["profile_pic_real"] = file_path
+            # 느낌상 뭉쳐서 한번에 하려고 이러는거 같은데.
+        db.users.update_one({'username': payload['id']}, {'$set':new_doc})
+        return jsonify({"result": "success", 'msg': '프로필을 업데이트했습니다.'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 #포스팅 루트
 @app.route("/posting", methods=["POST"])
 def music_post():
-    url_receive = request.form['url_give']
-    feeling_receive = request.form['feeling_give']
-    comment_receive = request.form['comment_give']
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-    data = requests.get(url_receive, headers=headers)
+        url_receive = request.form['url_give']
+        feeling_receive = request.form['feeling_give']
+        comment_receive = request.form['comment_give']
 
-    soup = BeautifulSoup(data.text, 'html.parser')
+        date_receive = request.form["date_give"]
 
-    title = soup.select_one('meta[itemprop="name"][content]')['content']
-    # 제목 뽑아오는 코드
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        data = requests.get(url_receive, headers=headers)
 
-    doc = {
-        'title': title,
-        'url': url_receive,
-        'feeling': feeling_receive,
-        'comment': comment_receive
-    }
-    db.posts.insert_one(doc)
-    return jsonify({'msg': '저장 완료!'})
+        soup = BeautifulSoup(data.text, 'html.parser')
+
+        title = soup.select_one('meta[itemprop="name"][content]')['content']
+        # 제목 뽑아오는 코드
+
+        doc = {
+            "username": user_info["username"],
+            "profile_name": user_info["profile_name"],
+            'title': title,
+            'url': url_receive,
+            'feeling': feeling_receive,
+            'comment': comment_receive,
+            "date": date_receive
+        }
+        db.posts.insert_one(doc)
+        return jsonify({"result": "success", 'msg': '저장 완료!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 #sad 페이지 GET
 @app.route("/sad_get", methods=["GET"])
 def post_get():
-    post_list = list(db.posts.find({'feeling':'슬픔'}, {'_id': False}))
-    return jsonify({'posts': post_list})
-
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # ############### 메인과 마이 페이지 구분을 위한 함수 #########
+        username_receive = request.args.get("username_give")
+        # url 파라미터로 받았기 때문에 request.args.get 을 쓴다고.
+        if username_receive == "":
+            posts = list(db.posts.find({'feeling':'슬픔'}).sort("date", -1).limit(20))
+        else:
+            posts = list(db.posts.find({"username": username_receive}, {'feeling':'슬픔'}).sort("date", -1).limit(20))
+        for post in posts:
+            post["_id"] = str(post["_id"])
+        return jsonify({"result": "success", 'posts': posts})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+# 밑은 일단 제쳐두고 sad만 합시다.
 #joy 페이지 GET
 @app.route("/joy_get", methods=["GET"])
 def joy_get():
@@ -189,6 +260,7 @@ def happy_get():
 def angry_get():
     post_list = list(db.posts.find({'feeling':'분노'}, {'_id': False}))
     return jsonify({'posts':post_list})
+
 
 
 if __name__ == '__main__':
