@@ -7,6 +7,7 @@ import jwt
 import datetime
 import hashlib
 from werkzeug.utils import secure_filename
+
 from datetime import datetime, timedelta
 
 from pymongo import MongoClient
@@ -159,11 +160,11 @@ def music_post():
     # 제목 뽑아오는 코드
 
     # db에 올릴 때 num값을 부여해주기
-    # post_list = list(db.posts.find({'feeling': '분노'}, {'_id': False}))
-    # count = len(post_list) + 1
+    post_list = list(db.posts.find({'feeling': '분노'}, {'_id': False}))
+    count = len(post_list) + 1
 
     doc = {
-        # 'num': count,
+        'num': count,
         'title': title,
         'url': url_receive,
         'feeling': feeling_receive,
@@ -196,13 +197,13 @@ def angry_get():
     return jsonify({'posts':post_list})
 
 
-# @app.route('/angry/delete_card', methods=['POST'])
-# def delete_card():
-#     # 해당 뮤직카드삭제하기
-#     # num_receive = request.form["num_give"]
-#     # db.angry.delete_one({"num": int(num_receive)})
-#
-#     return jsonify({'msg': '삭제 완료!'})
+@app.route('/angry/delete_card', methods=['POST'])
+def delete_card():
+    # 해당 뮤직카드삭제하기
+    num_receive = request.form["num_give"]
+    db.posts.delete_one({'num': int(num_receive)})
+
+    return jsonify({'msg': '삭제 완료!'})
 
 
 if __name__ == '__main__':
