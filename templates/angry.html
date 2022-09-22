@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Jua&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mystyle_main.css') }}" rel="stylesheet">
+    <title>4feeling 분노</title>
+
+
+    <script>
+        $(document).ready(function () {
+            listing();
+        });
+
+        function listing() {
+            $.ajax({
+                type:'GET',
+                url:'/angry_get',
+                data: {},
+                success:function(response) {
+                    let rows = response['posts'];
+                    for ( let i = 0; i < rows.length; i++){
+                        let url = rows[i]['url'].split('watch?v=')[1];
+                        let title = rows[i]['title'];
+                        // let name = rows[i]['name'];
+                        let feeling = rows[i]['feeling'];
+                        let comment = rows[i]['comment'];
+                        // let num = rows[i]['num'];
+
+                        let temp_html = `<div class="col">
+                                            <div class="card">
+                                                <div class="ratio ratio-16x9">
+                                                  <iframe src="https://www.youtube.com/embed/${url}" title="YouTube video" allowfullscreen></iframe>
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${feeling}</h5>
+                                                    <p class="card-text">${comment}</p>
+                                                    <p class="card-text"><small class="text-muted">${title}</small></p>
+                                                    <div class="mybtn" id="mybtn">
+                                                      <button class="button is-danger" onclick="delete_card()"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>`; /* num 넘겨줄 시 ${num}을 delet_card()안의 변수로 넣어줌 <button class="button is-danger" onclick="delete_card(${num})">*/
+                        $('#cards_box').prepend(temp_html);
+                    }
+                }
+            });
+        }
+        function posting() {
+            let url = $('#url').val()
+            let feeling = $('#inputGroupSelect01').val()
+            let comment = $('#floatingTextarea2').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/posting',
+                data: {'url_give': url, 'feeling_give': feeling, 'comment_give': comment},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload() //새로고침
+                }
+            });
+        }
+        function delete_card() {
+            let comment = $('#comment').val();
+                $.ajax({
+                    type: "POST",
+                    url: '/angry/delete_card',
+                    // data: {'num_give': num, 'comment_give' : comment},
+                    data: {'comment_give' : comment},
+                    success: function (response) {
+                        alert(response["msg"]);
+                        // window.location.href = "/angry";
+                    }
+                });
+            // }
+
+        }
+
+
+        function open_box(){
+            $('#post-box').show()
+        }
+        function close_box(){
+            $('#post-box').hide()
+        }
+
+    </script>
+</head>
+
+<body>
+<section class="hero is-danger">
+    <div class="hero-body mytitle_sad mytitle">
+        <p class="title">
+            기분이 이럴때 이 음악을 들어보세요
+        </p>
+        <p class="subtitle">
+            꿀꿀한 지금 이 노래는 어때요?
+        </p>
+        <button onclick="open_box()">음악 기록하기</button>
+    </div>
+</section>
+<nav class="level">
+    <p onclick="location.href='/happy'" class="level-item has-text-centered">
+        <a class="font link is-info">HAPPY</a>
+    </p>
+    <p onclick="location.href='/angry'" class="level-item has-text-centered">
+        <a class="font link is-info">ANGRY</a>
+    </p>
+    <div class="mypost" id="post-box">
+        <div class="form-floating mb-3">
+            <input id="url" type="email" class="form-control" placeholder="name@example.com">
+            <label>유튜브 URL</label>
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">기분</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>-- 선택하기 --</option>
+                <option value="기쁨">기쁨</option>
+                <option value="분노">분노</option>
+                <option value="슬픔">슬픔</option>
+                <option value="즐거움">즐거움</option>
+            </select>
+        </div>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="comment" ></textarea>
+            <label for="floatingTextarea2">코멘트</label>
+        </div>
+        <div class="mybtn">
+            <button onclick="posting()" class="button is-outlined">완료</button>
+            <button onclick="close_box()" class="button is-outlined">닫기</button>
+        </div>
+    </div>
+    <p onclick="location.href='/'" class="level-item has-text-centered">
+        <a class="font link is-info">SAD</a>
+    </p>
+    <p onclick="location.href='/joy'" class="level-item has-text-centered">
+        <a class="font link is-info">JOY</a>
+    </p>
+</nav>
+<div class="wrap">
+    <div id="cards_box" class="row row-cols-1 row-cols-md-4 g-4">
+    </div>
+</div>
+
+</body>
+
+</html>
