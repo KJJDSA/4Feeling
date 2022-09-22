@@ -3,30 +3,30 @@
 <head>
 
     <!-- Webpage Title -->
-    <title>{{ user_info.name }} | 마이페이지</title>
+    <title>{{ user_info.profile_name }} | 마이페이지</title>
 
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <meta property="og:title" content="스위터 - 세상을 달달하게"/>
+    <meta property="og:title" content="마이페이지"/>
     <meta property="og:description" content="mini project for Web Plus"/>
     <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
-    <!-- Bulma CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-    <!-- Font Awesome CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
-    <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Jua&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mystyle_main.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
-    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
     <script>
 
         $(document).ready(function () {
-            get_posts('{{ user_info.username }}')
+            listing('{{ user_info.username }}')
         })
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
@@ -64,19 +64,19 @@
 
 </head>
 <body>
-<body class="has-navbar-fixed-top">
-<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-            <img src="{{ url_for('static', filename='logo.png') }}">
-            <strong class="is-sparta"
-                    style="font-family: 'Stylish', sans-serif;font-size: larger;">SWEETER</strong>
-        </a>
-    </div>
-</nav>
-<section class="hero is-white">
-    <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">
-        <article class="media">
+<section class="hero is-medium is-info">
+    <div class="hero-body">
+
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+{#                <img src="{{ url_for('static', filename='logo.png') }}">#}
+                <strong class="is-sparta"
+                        style="font-family: 'Stylish', sans-serif;font-size: larger;">희노애락</strong>
+            </a>
+        </div>
+    </nav>
+     <article class="media" style="width: 500px; margin: auto">
             <figure class="media-left" style="align-self: center">
                 <a class="image is-96x96" href="#">
                     <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
@@ -84,8 +84,8 @@
             </figure>
             <div class="media-content">
                 <div class="content">
-                    <p>
-                        <strong>{{ user_info.profile_name }}</strong> <small>@{{ user_info.username }}</small>
+                    <p >
+                        <strong style="font-size: 30px" >{{ user_info.profile_name }}</strong> <small style="font-size: 25px">@{{ user_info.username }}</small>
                         <br>
                         {{ user_info.profile_info }}
                     </p>
@@ -93,10 +93,8 @@
 
             </div>
         </article>
-        {# ############# 아래는 모달 프로틸 기능 ############### #}
-        {% if status %}
-
-            <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+         {% if status %}
+            <nav id="btns-me" class="level is-mobile" style="margin: 2rem auto 0 auto; width: 300px">
                 <a class="button level-item has-text-centered is-sparta" aria-label="edit"
                    onclick='$("#modal-edit").addClass("is-active")'>
                     프로필 수정&nbsp;&nbsp;&nbsp;
@@ -175,97 +173,97 @@
             </div>
 
         {% endif %}
+    </div>
+</section>
+<nav class="level">
+    <p onclick="location.href='/happy'" class="level-item has-text-centered">
+        <a class="font link is-info">HAPPY</a>
+    </p>
+    <p onclick="location.href='/angry'" class="level-item has-text-centered">
+        <a class="font link is-info">ANGRY</a>
+    </p>
+    <div class="mypost" id="post-box">
+        <div class="form-floating mb-3">
+            <input id="url" type="email" class="form-control" placeholder="name@example.com">
+            <label>유튜브 URL</label>
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01">기분</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>-- 선택하기 --</option>
+                <option value="기쁨">기쁨</option>
+                <option value="분노">분노</option>
+                <option value="슬픔">슬픔</option>
+                <option value="즐거움">즐거움</option>
+            </select>
+        </div>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" ></textarea>
+            <label for="floatingTextarea2">코멘트</label>
+        </div>
+        <div class="mybtn">
+            <button onclick="posting()" class="button is-outlined">완료</button>
+            <button onclick="close_box()" class="button is-outlined">닫기</button>
+        </div>
+    </div>
+    <p onclick="location.href='/'" class="level-item has-text-centered">
+        <a class="font link is-info">SAD</a>
+    </p>
+    <p onclick="location.href='/joy'" class="level-item has-text-centered">
+        <a class="font link is-info">JOY</a>
+    </p>
+</nav>
+
+{#  <div class="category">#}
+{#    <button onclick="location.href='/happy'" type="button" class="btn btn-primary">기쁨</button>#}
+{#    <button onclick="location.href='/angry'" type="button" class="btn btn-danger">분노</button>#}
+{#    <button onclick="location.href='/'" type="button" class="btn btn-warning">슬픔</button>#}
+{#    <button onclick="location.href='/joy'" type="button" class="btn btn-light">즐거움</button>#}
+{#  </div>#}
+<div class="wrap">
+    <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4" >
+    </div>
+</div>
+</body>
+{#<body class="has-navbar-fixed-top">#}
+{#<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">#}
+{#    <div class="navbar-brand">#}
+{#        <a class="navbar-item" href="/">#}
+{#            <img src="{{ url_for('static', filename='logo.png') }}">#}
+{#            <strong class="is-sparta"#}
+{#                    style="font-family: 'Stylish', sans-serif;font-size: larger;">희노애락</strong>#}
+{#        </a>#}
+{#    </div>#}
+{#</nav>#}
+{#<section class="hero is-info">#}
+{#    <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">#}
+{#        <article class="media">#}
+{#            <figure class="media-left" style="align-self: center">#}
+{#                <a class="image is-96x96" href="#">#}
+{#                    <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">#}
+{#                </a>#}
+{#            </figure>#}
+{#            <div class="media-content">#}
+{#                <div class="content">#}
+{#                    <p>#}
+{#                        <strong>{{ user_info.profile_name }}</strong> <small>@{{ user_info.username }}</small>#}
+{#                        <br>#}
+{#                        {{ user_info.profile_info }}#}
+{#                    </p>#}
+{#                </div>#}
+{##}
+{#            </div>#}
+{#        </article>#}
+        {# ############# 아래는 모달 프로틸 기능 ############### #}
+
         {# ############# 위는 모달 프로틸 기능 ############### #}
-    </div>
-</section>
-{% if status %}{# jinja2 를 이용한 파이썬 if문. status가 true일결우만 section이 생성된다. #}
-    <section class="section">
-    <article class="media">
-        <figure class="media-left" style="align-self: center">
-            <a class="image is-32x32" href="/user/{{ user_info.username }}">
-                <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
-            </a>
-        </figure>
-        <div class="media-content">
-            <div class="field">
-                <p class="control">
-                    <input id="input-post" class="input is-rounded" placeholder="무슨 생각을 하고 계신가요?"
-                           onclick='$("#modal-post").addClass("is-active")'>
-                </p>
-            </div>
-        </div>
-    </article>
-    <div class="modal" id="modal-post">
-        <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
-        <div class="modal-content">
-            <div class="box">
-                <article class="media">
-                    <div class="media-content">
-                        <div class="field">
-                            <p class="control">
-                                  <textarea id="textarea-post" class="textarea"
-                                            placeholder="무슨 생각을 하고 계신가요?"></textarea>
-                            </p>
-                        </div>
-                        <nav class="level is-mobile">
-                            <div class="level-left">
-
-                            </div>
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <a class="button is-sparta" onclick="post()">포스팅하기</a>
-                                </div>
-                                <div class="level-item">
-                                    <a class="button is-sparta is-outlined"
-                                       onclick='$("#modal-post").removeClass("is-active")'>취소</a>
-                                </div>
-                            </div>
-                        </nav>
-                    </div>
-                </article>
-            </div>
-        </div>
-        <button class="modal-close is-large" aria-label="close"
-                onclick='$("#modal-post").removeClass("is-active")'></button>
-    </div>
-
-</section>
-{% endif %}
-<section class="section">
-    <div id="post-box" class="container">
-        <div class="box">
-            <article class="media">
-                <div class="media-left">
-                    <a class="image is-64x64" href="#">
-                        <img class="is-rounded"
-                             src={{ url_for("static", filename="profile_pics/profile_placeholder.png") }} alt="Image">
-                    </a>
-                </div>
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>
-                            <br>
-                            글을 적는 칸
-                        </p>
-                    </div>
-                    <nav class="level is-mobile">
-                        <div class="level-left">
-                            <a class="level-item is-sparta" aria-label="heart"
-                               onclick="toggle_like('', 'heart')">
-                                  <span class="icon is-small"><i class="fa fa-heart"
-                                                                 aria-hidden="true"></i></span>&nbsp;<span
-                                    class="like-num">2.7k</span>
-                            </a>
-                        </div>
-
-                    </nav>
-                </div>
-            </article>
-        </div>
-
-    </div>
-</section>
-</body>
-</body>
+{#    </div>#}
+{#</section>#}
+{#<section class="section">#}
+{#<div class="wrap">#}
+{#    <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4" >#}
+{#    </div>#}
+{#</div>#}
+{#</section>#}
+{#</body>#}
 </html>

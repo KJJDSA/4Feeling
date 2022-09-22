@@ -30,7 +30,8 @@ def home():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         # jwt토큰을 해독한다
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('index.html', user_info=user_info)
+        mypage = "sad"
+        return render_template('sad.html', user_info=user_info, page=mypage)
         # 요청한 유저정보를 html에 던져준다!
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -45,7 +46,8 @@ def joy():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         # jwt토큰을 해독한다
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('joy.html', user_info=user_info)
+        mypage = "joy"
+        return render_template('joy.html', user_info=user_info, page=mypage)
         # 요청한 유저정보를 html에 던져준다!
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -59,7 +61,8 @@ def happy():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         # jwt토큰을 해독한다
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('happy.html', user_info=user_info)
+        mypage = "happy"
+        return render_template('happy.html', user_info=user_info, page=mypage)
         # 요청한 유저정보를 html에 던져준다!
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -73,7 +76,8 @@ def angry():
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         # jwt토큰을 해독한다
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('angry.html', user_info=user_info)
+        mypage = "angry"
+        return render_template('angry.html', user_info=user_info, page=mypage)
         # 요청한 유저정보를 html에 던져준다!
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
@@ -156,6 +160,46 @@ def check_dup():
 
 ######################### 로그인기능 끝
 
+
+#포스팅 루트
+@app.route("/posting", methods=["POST"])
+def music_post():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+
+        url_receive = request.form['url_give']
+        feeling_receive = request.form['feeling_give']
+        comment_receive = request.form['comment_give']
+
+
+        date_receive = request.form["date_give"]
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        data = requests.get(url_receive, headers=headers)
+
+        soup = BeautifulSoup(data.text, 'html.parser')
+
+        title = soup.select_one('meta[itemprop="name"][content]')['content']
+        # 제목 뽑아오는 코드
+
+        doc = {
+            "username": user_info["username"],
+            "profile_name": user_info["profile_name"],
+            "profile_pic_real": user_info["profile_pic_real"],
+            'title': title,
+            'url': url_receive,
+            'feeling': feeling_receive,
+            'comment': comment_receive,
+            "date": date_receive
+        }
+        db.posts.insert_one(doc)
+        return jsonify({"result": "success", 'msg': '저장 완료!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 @app.route('/update_profile', methods=['POST'])
 def save_img():
     token_receive = request.cookies.get('mytoken')
@@ -188,46 +232,9 @@ def save_img():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
-#포스팅 루트
-@app.route("/posting", methods=["POST"])
-def music_post():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"username": payload["id"]})
-
-        url_receive = request.form['url_give']
-        feeling_receive = request.form['feeling_give']
-        comment_receive = request.form['comment_give']
-
-        date_receive = request.form["date_give"]
-
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-        data = requests.get(url_receive, headers=headers)
-
-        soup = BeautifulSoup(data.text, 'html.parser')
-
-        title = soup.select_one('meta[itemprop="name"][content]')['content']
-        # 제목 뽑아오는 코드
-
-        doc = {
-            "username": user_info["username"],
-            "profile_name": user_info["profile_name"],
-            'title': title,
-            'url': url_receive,
-            'feeling': feeling_receive,
-            'comment': comment_receive,
-            "date": date_receive
-        }
-        db.posts.insert_one(doc)
-        return jsonify({"result": "success", 'msg': '저장 완료!'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
 #sad 페이지 GET
-@app.route("/sad_get", methods=["GET"])
-def post_get():
+@app.route("/getsad", methods=["GET"])
+def post_get_sad():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -237,7 +244,7 @@ def post_get():
         if username_receive == "":
             posts = list(db.posts.find({'feeling':'슬픔'}).sort("date", -1).limit(20))
         else:
-            posts = list(db.posts.find({"username": username_receive}, {'feeling':'슬픔'}).sort("date", -1).limit(20))
+            posts = list(db.posts.find({"username": username_receive}).sort("date", -1).limit(20))
         for post in posts:
             post["_id"] = str(post["_id"])
         return jsonify({"result": "success", 'posts': posts})
@@ -245,21 +252,60 @@ def post_get():
         return redirect(url_for("home"))
 # 밑은 일단 제쳐두고 sad만 합시다.
 #joy 페이지 GET
-@app.route("/joy_get", methods=["GET"])
-def joy_get():
-    post_list = list(db.posts.find({'feeling':'즐거움'}, {'_id': False}))
-    return jsonify({'posts':post_list})
+@app.route("/gethappy", methods=["GET"])
+def post_get_happy():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # ############### 메인과 마이 페이지 구분을 위한 함수 #########
+        username_receive = request.args.get("username_give")
+        # url 파라미터로 받았기 때문에 request.args.get 을 쓴다고.
+        if username_receive == "":
+            posts = list(db.posts.find({'feeling':'기쁨'}).sort("date", -1).limit(20))
+        else:
+            posts = list(db.posts.find({"username": username_receive}).sort("date", -1).limit(20))
+        for post in posts:
+            post["_id"] = str(post["_id"])
+        return jsonify({"result": "success", 'posts': posts})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
-#happy 페이지 GET
-@app.route("/happy_get", methods=["GET"])
-def happy_get():
-    post_list = list(db.posts.find({'feeling':'기쁨'}, {'_id': False}))
-    return jsonify({'posts':post_list})
-#angry 페이지 GET
-@app.route("/angry_get", methods=["GET"])
-def angry_get():
-    post_list = list(db.posts.find({'feeling':'분노'}, {'_id': False}))
-    return jsonify({'posts':post_list})
+@app.route("/getjoy", methods=["GET"])
+def post_get_joy():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # ############### 메인과 마이 페이지 구분을 위한 함수 #########
+        username_receive = request.args.get("username_give")
+        # url 파라미터로 받았기 때문에 request.args.get 을 쓴다고.
+        if username_receive == "":
+            posts = list(db.posts.find({'feeling':'즐거움'}).sort("date", -1).limit(20))
+        else:
+            posts = list(db.posts.find({"username": username_receive}).sort("date", -1).limit(20))
+        for post in posts:
+            post["_id"] = str(post["_id"])
+        return jsonify({"result": "success", 'posts': posts})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
+@app.route("/getangry", methods=["GET"])
+def post_get_angry():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        # ############### 메인과 마이 페이지 구분을 위한 함수 #########
+        username_receive = request.args.get("username_give")
+        # url 파라미터로 받았기 때문에 request.args.get 을 쓴다고.
+        if username_receive == "":
+            posts = list(db.posts.find({'feeling':'분노'}).sort("date", -1).limit(20))
+        else:
+            posts = list(db.posts.find({"username": username_receive}).sort("date", -1).limit(20))
+        for post in posts:
+            post["_id"] = str(post["_id"])
+        return jsonify({"result": "success", 'posts': posts})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
+
 
 
 

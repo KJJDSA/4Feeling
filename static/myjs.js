@@ -16,8 +16,7 @@ function time2str(date) {
     }
     return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`
 }
-function listing(username) {
-
+function listing(username, page) {
     if (username==undefined) {
         username=""
         //유저네임이 없으면 유저네임을 공란으로
@@ -25,7 +24,7 @@ function listing(username) {
     $("#cards-box").empty()
     $.ajax({
         type:'GET',
-        url:`/sad_get?username_give=${username}`,
+        url:`/get${page}?username_give=${username}`,
         data: {},
         success:function(response) {
             console.log(response)
@@ -41,13 +40,14 @@ function listing(username) {
                 let time_before = time2str(time_post)
                 let temp_html = `<div class="col">
                                     <div class="card">
-                                            <a class="image is-48x48" href="/user/${post['username']}">
-                                                <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}"
+                                        <div style="margin-left: 20px; width: 32px; height: 32px">
+                                            <a class="image is-32x32" href="/user/${post['username']}">
+                                                <img class="is-rounded" src="/static/${post['profile_pic_real']}"
                                                      alt="Image">
                                             </a>
                                         </div>
-                                        <div class="media-content">
-                                            <div class="content">
+                                        <div class="media-content"
+                                            <div class="content" style="margin-left: 20px;">
                                             <p><strong>${post['profile_name']}</strong> <small>${time_before}</small></p>
                                         </div>
                                         <div class="ratio ratio-16x9">
@@ -58,7 +58,7 @@ function listing(username) {
                                             <p class="card-text">${comment}</p>
                                             <p class="card-text"><small class="text-muted">${title}</small></p>
                                         </div>
-                                        
+                                        </div>
                                     </div>
                                 </div>`;
 
@@ -87,23 +87,25 @@ function posting() {
     }
     else {
         $.ajax({
-        type: 'POST',
-        url: '/posting',
-        data: {
-            'url_give': url,
-            'feeling_give': feeling,
-            'comment_give': comment,
-            'date_give': today
-        },
-        success: function (response) {
-            alert(response['msg'])
-            window.location.reload() //새로고침
-        }
-    });
+            type: 'POST',
+            url: '/posting',
+            data: {
+                'url_give': url,
+                'feeling_give': feeling,
+                'comment_give': comment,
+                'date_give': today
+            },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.reload() //새로고침
+            }
+        });
     }
 
 
 }
+
+
 
 function open_box() {
     $('#post-box').show()

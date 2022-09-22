@@ -25,21 +25,19 @@
 
 
     <script>
-        $(document).ready(function () {
-            listing();
+         $(document).ready(function () {
+            listing('{{ page }}');
         });
     </script>
 </head>
 
 <body>
-
 <section class="hero is-warning">
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <img src="{{ url_for('static', filename='logo.png') }}">
+            <a class="navbar-item" href="/user/{{user_info.username}}">
                 <strong class="is-sparta"
-                        style="font-family: 'Stylish', sans-serif;font-size: larger;">희노애락</strong>
+                        style="font-family: 'Stylish', sans-serif;font-size: medium;">My Page</strong>
             </a>
         </div>
     </nav>
@@ -91,15 +89,6 @@
         <a class="font link is-info">JOY</a>
     </p>
 </nav>
-
-{#  <div class="category">#}
-{#    <button onclick="location.href='/happy'" type="button" class="btn btn-primary">기쁨</button>#}
-{#    <button onclick="location.href='/angry'" type="button" class="btn btn-danger">분노</button>#}
-{#    <button onclick="location.href='/'" type="button" class="btn btn-warning">슬픔</button>#}
-{#    <button onclick="location.href='/joy'" type="button" class="btn btn-light">즐거움</button>#}
-{#  </div>#}
-
-
 <div class="wrap">
     <div id="cards-box" class="row row-cols-1 row-cols-md-4 g-4" >
     </div>

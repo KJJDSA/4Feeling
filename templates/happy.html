@@ -4,77 +4,41 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="스위터 - 세상을 달달하게"/>
+    <meta property="og:description" content="mini project for Web Plus"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Jua&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', filename='mystyle_main.css') }}" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Jua&display=swap" rel="stylesheet">    <title>4feeling 기쁨</title>
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
+    <title>4feeling 기쁨</title>
 
     <script>
         $(document).ready(function () {
-            listing();
+            listing('{{ page }}');
         });
-
-        function listing() {
-            $.ajax({
-                type:'GET',
-                url:'/happy_get',
-                data: {},
-                success:function(response) {
-                    let rows = response['posts'];
-                    for ( let i = 0; i < rows.length; i++){
-                        let url = rows[i]['url'].split('watch?v=')[1];
-                        let title = rows[i]['title'];
-                        // let name = rows[i]['name'];
-                        let feeling = rows[i]['feeling'];
-                        let comment = rows[i]['comment'];
-
-                        let temp_html = `<div class="col">
-                                            <div class="card">
-                                                <div class="ratio ratio-16x9">
-                                                  <iframe src="https://www.youtube.com/embed/${url}" title="YouTube video" allowfullscreen></iframe>
-                                                </div>
-                                                <div class="card-body">
-                                                    <h5 class="card-title">${feeling}</h5>
-                                                    <p class="card-text">${comment}</p>
-                                                    <p class="card-text"><small class="text-muted">${title}</small></p>
-                                                </div>
-                                            </div>
-                                        </div>`;
-                        $('#cards_box').prepend(temp_html);
-                    }
-                }
-            });
-        }
-        function posting() {
-            let url = $('#url').val()
-            let feeling = $('#inputGroupSelect01').val()
-            let comment = $('#floatingTextarea2').val()
-
-            $.ajax({
-                type: 'POST',
-                url: '/posting',
-                data: {'url_give': url, 'feeling_give': feeling, 'comment_give': comment},
-                success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload() //새로고침
-                }
-            });
-        }
-        function open_box(){
-            $('#post-box').show()
-        }
-        function close_box(){
-            $('#post-box').hide()
-        }
-
     </script>
 </head>
 
 <body>
 <section class="hero is-link">
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/user/{{user_info.username}}" style="text-decoration-line: none;">
+                <strong class="is-sparta"
+                        style="font-family: 'Stylish', sans-serif;font-size: medium;">My Page</strong>
+            </a>
+        </div>
+    </nav>
     <div class="hero-body mytitle_sad mytitle">
         <p class="title">
             기분이 이럴때 이 음악을 들어보세요
